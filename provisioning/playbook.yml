@@ -1,0 +1,75 @@
+---
+- hosts: all
+  become: yes
+
+  handlers:
+    - name: restart sshd
+      command: systemctl restart sshd.service
+
+  tasks:
+    - name: Adjust vagrant ssh config
+      lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: "^PasswordAuthentication no"
+        line: "PasswordAuthentication no"
+        state: present
+      notify: restart sshd
+
+    - name: Installing dependencies
+      yum: name={{ item }} state=present
+      with_items:
+        - epel-release
+        - git
+        - curl
+        - vim
+        - gcc
+        - gcc-c++
+        - glibc-devel
+        - make
+        - ncurses-devel
+        - openssl-devel
+        - autoconf
+        - java-1.8.0-openjdk-devel
+        - wget
+        - unixODBC-devel
+        - unzip
+        - which
+
+    - name: Install Erlang
+      yum:
+        name: http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_19.3.6-1~centos~7_amd64.rpm
+        state: present
+
+    - name: Creating elixir directory
+      file:
+       path: /opt/elixir
+       state: directory
+       mode: 0755
+
+    - name: Downloading elixir precompiled
+      unarchive:
+        src: https://github.com/elixir-lang/elixir/releases/download/v1.5.0/Precompiled.zip
+        dest: /opt/elixir
+        remote_src: True
+        creates: /opt/elixir/VERSION
+
+    - name: Creating symbolic links for elixir
+      file:
+        src:  '/opt/elixir/bin/{{ item.name }}'
+        dest: '/usr/bin/{{ item.name }}'
+        state: link
+      with_items:
+        - { name: 'elixir' }
+        - { name: 'elixirc' }
+        - { name: 'iex' }
+        - { name: 'mix' }
+
+    # - name: Install hex package manager
+    #   shell: /usr/bin/mix local.hex --force
+    #   args:
+    #     - creates: /home/vagrant/.mix/archives/hex.ez
+
+      #$- name: Installing Phoenix
+      #$- shell: /usr/local/bin/mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez --force
+      #$- args:
+      #$-   creates: /home/vagrant/.mix/archives/phoenix_new.ez
