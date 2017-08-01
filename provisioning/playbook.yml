@@ -67,4 +67,4 @@
     - name: Install hex package manager
       shell: mix local.hex --force
       args:
-        creates: /home/vagrant/.mix/archives/hex.ez
+        creates: /root/.mix/archives/hex.ez
