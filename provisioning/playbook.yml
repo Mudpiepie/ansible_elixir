@@ -15,6 +15,12 @@
         state: present
       notify: restart sshd
 
+    - name: Insert local key into authorized_keys
+      become_user: vagrant
+      blockinfile:
+        block: "{{ lookup('file', '~/.ssh/id_rsa.pub')}}"
+        dest: "~/.ssh/authorized_keys"
+
     - name: Installing dependencies
       yum: name={{ item }} state=present
       with_items:
@@ -65,9 +71,9 @@
         - { name: 'mix' }
 
     - name: Install hex package manager
+      become_user: vagrant
       shell: mix local.hex --force
 
     - name: Installing Phoenix
+      become_user: vagrant
       shell: mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez --force
-      args:
-        creates: /root/.mix/archives/phoenix_new.ez
