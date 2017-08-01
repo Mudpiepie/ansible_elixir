@@ -38,7 +38,7 @@
     - name: Install Erlang
       yum:
         name: http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_19.3.6-1~centos~7_amd64.rpm
-        state: present
+        state: installed
 
     - name: Creating elixir directory
       file:
@@ -64,12 +64,7 @@
         - { name: 'iex' }
         - { name: 'mix' }
 
-    # - name: Install hex package manager
-    #   shell: /usr/bin/mix local.hex --force
-    #   args:
-    #     - creates: /home/vagrant/.mix/archives/hex.ez
-
-      #$- name: Installing Phoenix
-      #$- shell: /usr/local/bin/mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez --force
-      #$- args:
-      #$-   creates: /home/vagrant/.mix/archives/phoenix_new.ez
+    - name: Install hex package manager
+      shell: mix local.hex --force
+      args:
+        creates: /home/vagrant/.mix/archives/hex.ez
