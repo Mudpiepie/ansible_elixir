@@ -22,7 +22,7 @@
       become_user: vagrant
       blockinfile:
         block: "{{ lookup('file', '{{ personal_key_path }}')}}"
-        dest: "~/.ssh/authorized_keys"
+        dest: "{{ authorized_keys_path }}"
 
     - name: Installing dependencies
       yum: name={{ item }} state=present
@@ -46,26 +46,26 @@
 
     - name: Install Erlang
       yum:
-        name: http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_19.3.6-1~centos~7_amd64.rpm
+        name: "{{ erlang_distribution_url }}"
         state: present
 
     - name: Creating elixir directory
       file:
-       path: /opt/elixir
+       path: "{{ elixir_home }}"
        state: directory
-       mode: 0755
+       mode: 0751
 
     - name: Downloading elixir precompiled
       unarchive:
-        src: https://github.com/elixir-lang/elixir/releases/download/v1.5.0/Precompiled.zip
-        dest: /opt/elixir
+        src: "{{ elixir_precompiled_url }}"
+        dest: "{{ elixir_home }}"
         remote_src: True
-        creates: /opt/elixir/VERSION
+        creates: "{{ elixir_home }}/VERSION"
 
     - name: Creating symbolic links for elixir
       file:
-        src:  '/opt/elixir/bin/{{ item.name }}'
-        dest: '/usr/bin/{{ item.name }}'
+        src:  "{{ elixir_home }}/bin/{{ item.name }}"
+        dest: "/usr/bin/{{ item.name }}"
         state: link
       with_items:
         - { name: 'elixir' }
@@ -79,4 +79,4 @@
 
     - name: Installing Phoenix
       become_user: vagrant
-      shell: mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez --force
+      shell: "mix archive.install {{ phoenix_url }} --force"
