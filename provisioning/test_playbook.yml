@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  handlers:
+    - name: restart sshd
+      command: systemctl restart sshd.service
+
+  tasks:
+    - name: Adjust vagrant ssh config
+      lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: "^PasswordAuthentication no"
+        line: "PasswordAuthentication no"
+        state: present
+      notify: restart sshd
+
+    - name: Insert local key into authorized_keys
+      become_user: vagrant
+      blockinfile:
+        block: "{{ lookup('file', '{{ personal_key_path }}')}}"
+        dest: "{{ authorized_keys_path }}"
+
+    - name: Adding export port to test host
+      become_user: vagrant
+      lineinfile:
+        dest: "~/.bashrc"
+        regexp: "^export PORT=4000"
+        line: "export PORT=4000"
+        state: present
