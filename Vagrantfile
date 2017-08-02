@@ -11,14 +11,24 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
 
   # build host
   config.vm.define "build-host" do |build|
-
     build.vm.hostname = "build.host"
     build.vm.network :private_network, ip: "192.168.60.7"
 
     build.vm.provision "ansible" do |ansible|
       ansible.playbook = "provisioning/playbook.yml"
       ansible.inventory_path = "provisioning/inventory"
-      ansible.limit = "all"
+      ansible.limit = "build"
+    end
+  end
+
+  config.vm.define "test-host" do |build|
+    build.vm.hostname = "test.host"
+    build.vm.network :private_network, ip: "192.168.60.8"
+
+    build.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioning/test_playbook.yml"
+      ansible.inventory_path = "provisioning/inventory"
+      ansible.limit = "test"
     end
   end
 end
