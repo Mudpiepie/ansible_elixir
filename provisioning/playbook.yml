@@ -24,12 +24,6 @@
         block: "{{ lookup('file', '{{ personal_key_path }}')}}"
         dest: "{{ authorized_keys_path }}"
 
-    - name: Copying profile file
-      become_user: vagrant
-      copy:
-        src: "{{ profile_source }}"
-        dest: "{{ profile_destination }}"
-
     - name: Installing dependencies
       yum: name={{ item }} state=present
       with_items:

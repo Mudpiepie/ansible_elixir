@@ -6,6 +6,3 @@ erlang_distribution_url: http://packages.erlang-solutions.com/site/esl/esl-erlan
 elixir_home: /opt/elixir
 elixir_precompiled_url: https://github.com/elixir-lang/elixir/releases/download/v1.5.0/Precompiled.zip
 phoenix_url: https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
-
-profile_source: ~/Documents/mudpie_services/config/profile
-profile_destination: ~/.profile
