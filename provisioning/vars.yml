@@ -5,4 +5,4 @@ authorized_keys_path: ~/.ssh/authorized_keys
 erlang_distribution_url: http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_general/esl-erlang_19.3.6-1~centos~7_amd64.rpm
 elixir_home: /opt/elixir
 elixir_precompiled_url: https://github.com/elixir-lang/elixir/releases/download/v1.5.0/Precompiled.zip
-phoenix_url: https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
+phoenix_url: mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
