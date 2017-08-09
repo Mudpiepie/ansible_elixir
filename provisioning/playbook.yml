@@ -44,6 +44,11 @@
         - unzip
         - which
 
+    - name: Installing nodejs
+      yum:
+        name: nodejs
+        state: present
+
     - name: Install Erlang
       yum:
         name: "{{ erlang_distribution_url }}"
